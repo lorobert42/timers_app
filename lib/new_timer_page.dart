@@ -13,6 +13,7 @@ class NewTimerPage extends StatefulWidget {
 class _NewTimerPageState extends State<NewTimerPage> {
   final titleController = TextEditingController();
   Duration? _selectedDuration;
+  String _selectedDurationText = '';
 
   Future<void> _showDurationPicker() async {
     final Duration? result = await showDurationPicker(
@@ -22,6 +23,8 @@ class _NewTimerPageState extends State<NewTimerPage> {
     if (result != null) {
       setState(() {
         _selectedDuration = result;
+        _selectedDurationText =
+            '${_selectedDuration!.hour}h ${_selectedDuration!.minute}m ${_selectedDuration!.second}s';
       });
     }
   }
@@ -39,25 +42,34 @@ class _NewTimerPageState extends State<NewTimerPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
-            spacing: 16.0,
             children: [
-              TextFormField(
-                controller: titleController,
-                decoration: InputDecoration(hintText: 'Titre'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: TextFormField(
+                  controller: titleController,
+                  decoration: InputDecoration(
+                    hintText: 'Nom de votre timer',
+                    labelText: 'Titre',
+                  ),
+                ),
               ),
-              Column(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: _showDurationPicker,
-                    icon: Icon(Icons.timelapse),
-                    label: Text('Durée'),
-                  ),
-                  Text(
-                    _selectedDuration != null
-                        ? _selectedDuration!.toString()
-                        : 'Pas de durée sélectionnée',
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Column(
+                  spacing: 8.0,
+                  children: [
+                    ElevatedButton.icon(
+                      onPressed: _showDurationPicker,
+                      icon: Icon(Icons.timelapse),
+                      label: Text('Durée'),
+                    ),
+                    Text(
+                      _selectedDurationText.isEmpty
+                          ? 'Pas de durée sélectionnée'
+                          : _selectedDurationText,
+                    ),
+                  ],
+                ),
               ),
               Divider(),
               Row(
