@@ -130,22 +130,35 @@ class _TimerCardState extends State<TimerCard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Spacer(),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      _timer.stop();
-                      _timer.reset();
-                      _remaining = widget.duration;
-                    });
-                  },
-                  icon: Icon(Icons.restart_alt),
+                Visibility(
+                  visible: false,
+                  maintainSize: true,
+                  maintainAnimation: true,
+                  maintainState: true,
+                  child: IconButton(onPressed: () {}, icon: Icon(Icons.abc)),
                 ),
-                IconButton(
-                  onPressed: () {
-                    _toggleTimer();
-                  },
-                  icon: Icon(_timer.isRunning ? Icons.pause : Icons.play_arrow),
+                Spacer(),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _timer.stop();
+                          _timer.reset();
+                          _remaining = widget.duration;
+                        });
+                      },
+                      icon: Icon(Icons.restart_alt),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        _toggleTimer();
+                      },
+                      icon: Icon(
+                        _timer.isRunning ? Icons.pause : Icons.play_arrow,
+                      ),
+                    ),
+                  ],
                 ),
                 Spacer(),
                 IconButton(
