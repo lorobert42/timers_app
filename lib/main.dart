@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_duration_picker/material_duration_picker.dart';
 import 'package:timers_app/models/timer_card_model.dart';
-import 'package:timers_app/new_timer_page.dart';
+import 'package:timers_app/widgets/new_timer_dialog.dart';
 import 'package:timers_app/widgets/timer_card.dart';
 
 void main() {
@@ -38,9 +38,9 @@ class _HomePageState extends State<HomePage> {
   final List<TimerCardModel> _cards = [];
 
   void _addCardMenu() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => NewTimerPage(onAddCard: addCard)),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => NewTimerDialog(onAddCard: addCard),
     );
   }
 
