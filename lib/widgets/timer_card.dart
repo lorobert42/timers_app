@@ -107,18 +107,31 @@ class _TimerCardState extends State<TimerCard> {
   }
 
   Future<void> _showWindowsNotification() async {
-    await flutterLocalNotificationsPlugin.show(
-      widget.id,
-      'Test alarm',
-      null,
-      const NotificationDetails(
-        windows: WindowsNotificationDetails(
+    const AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+          'channel id',
+          'channel name',
+          channelDescription: 'channel description',
+          importance: Importance.max,
+          priority: Priority.high,
+          ticker: 'ticker',
+        );
+    const WindowsNotificationDetails windowsNotificationDetails =
+        WindowsNotificationDetails(
           scenario: WindowsNotificationScenario.alarm,
           actions: <WindowsAction>[
             WindowsAction(content: 'Button', arguments: 'button'),
           ],
-        ),
-      ),
+        );
+    const NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
+      windows: windowsNotificationDetails,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      widget.id,
+      'Test alarm',
+      null,
+      notificationDetails,
     );
   }
 

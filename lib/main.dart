@@ -5,8 +5,12 @@ import 'package:material_duration_picker/material_duration_picker.dart';
 import 'package:timers_app/pages/home_page.dart';
 
 Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
   const WindowsInitializationSettings initializationSettingsWindows =
       WindowsInitializationSettings(
         appName: 'Timer App',
@@ -14,6 +18,7 @@ Future<void> main() async {
         guid: '334d0c4a-60e3-41bb-b74a-63d259863969',
       );
   final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
     windows: initializationSettingsWindows,
   );
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
