@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -107,14 +108,14 @@ class _TimerCardState extends State<TimerCard> {
   }
 
   Future<void> _showWindowsNotification() async {
-    const AndroidNotificationDetails androidNotificationDetails =
+    AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-          'channel id',
-          'channel name',
-          channelDescription: 'channel description',
+          'Alarme',
+          'Alarme',
+          channelDescription: 'Alarme lorsqu\'un timer est terminé.',
           importance: Importance.max,
           priority: Priority.high,
-          ticker: 'ticker',
+          additionalFlags: Int32List.fromList(<int>[4]),
         );
     const WindowsNotificationDetails windowsNotificationDetails =
         WindowsNotificationDetails(
@@ -123,14 +124,14 @@ class _TimerCardState extends State<TimerCard> {
             WindowsAction(content: 'Button', arguments: 'button'),
           ],
         );
-    const NotificationDetails notificationDetails = NotificationDetails(
+    NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails,
       windows: windowsNotificationDetails,
     );
     await flutterLocalNotificationsPlugin.show(
       widget.id,
-      'Test alarm',
-      null,
+      widget.title,
+      'Temps écoulé.',
       notificationDetails,
     );
   }
