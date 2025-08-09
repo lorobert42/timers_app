@@ -31,11 +31,13 @@ class _NewTimerDialogState extends State<NewTimerDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+
     return AlertDialog(
       title: const Text('Ajouter un timer'),
       content: FractionallySizedBox(
-        widthFactor: 0.3,
-        heightFactor: 0.8,
+        widthFactor: screenWidth > 600 ? 0.3 : 0.9,
+        heightFactor: screenWidth > 600 ? 0.8 : 0.5,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
