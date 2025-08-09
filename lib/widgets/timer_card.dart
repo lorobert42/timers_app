@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class TimerCard extends StatefulWidget {
   final int id;
@@ -24,6 +25,9 @@ class _TimerCardState extends State<TimerCard> {
   final _timer = Stopwatch();
   Timer? _timeKeeper;
   Duration _remaining = Duration.zero;
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   String get _timerText {
     if (_remaining < Duration.zero) {
@@ -69,7 +73,7 @@ class _TimerCardState extends State<TimerCard> {
       _timer.reset();
       _timer.start();
     });
-    _timeKeeper = Timer.periodic(Duration(milliseconds: 100), (timer) {
+    _timeKeeper = Timer.periodic(Duration(milliseconds: 100), (timer) async {
       setState(() => _remaining = widget.duration - _timer.elapsed);
       if (_remaining <= Duration.zero) {
         timer.cancel();
@@ -77,6 +81,7 @@ class _TimerCardState extends State<TimerCard> {
           _timeKeeper = null;
           _timer.stop();
         });
+        await _showWindowsNotification();
       }
     });
   }
@@ -99,6 +104,22 @@ class _TimerCardState extends State<TimerCard> {
     } else {
       _startTimer();
     }
+  }
+
+  Future<void> _showWindowsNotification() async {
+    await flutterLocalNotificationsPlugin.show(
+      widget.id,
+      'Test alarm',
+      null,
+      const NotificationDetails(
+        windows: WindowsNotificationDetails(
+          scenario: WindowsNotificationScenario.alarm,
+          actions: <WindowsAction>[
+            WindowsAction(content: 'Button', arguments: 'button'),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
