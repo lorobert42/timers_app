@@ -34,6 +34,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> {
             child: _cards.isNotEmpty
                 ? GridView.builder(
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
+                      crossAxisCount: screenWidth > 600 ? 3 : 1,
                     ),
                     itemCount: _cards.length,
                     itemBuilder: (context, index) => TimerCard(
