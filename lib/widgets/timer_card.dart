@@ -123,12 +123,7 @@ class _TimerCardState extends State<TimerCard> {
 
   Future<void> _showWindowsNotification() async {
     const WindowsNotificationDetails windowsNotificationDetails =
-        WindowsNotificationDetails(
-          scenario: WindowsNotificationScenario.alarm,
-          actions: <WindowsAction>[
-            WindowsAction(content: 'Button', arguments: 'button'),
-          ],
-        );
+        WindowsNotificationDetails(scenario: WindowsNotificationScenario.alarm);
     NotificationDetails notificationDetails = NotificationDetails(
       windows: windowsNotificationDetails,
     );
