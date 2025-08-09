@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:timezone/timezone.dart' as tz;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -65,7 +67,7 @@ class _TimerCardState extends State<TimerCard> {
     _remaining = widget.duration;
   }
 
-  void _startTimer() {
+  Future<void> _startTimer() async {
     if (_timer.isRunning || _timeKeeper != null) {
       return;
     }
@@ -74,6 +76,9 @@ class _TimerCardState extends State<TimerCard> {
       _timer.reset();
       _timer.start();
     });
+    if (Platform.isAndroid) {
+      await _scheduleAndroidNotification();
+    }
     _timeKeeper = Timer.periodic(Duration(milliseconds: 100), (timer) async {
       setState(() => _remaining = widget.duration - _timer.elapsed);
       if (_remaining <= Duration.zero) {
@@ -82,7 +87,9 @@ class _TimerCardState extends State<TimerCard> {
           _timeKeeper = null;
           _timer.stop();
         });
-        await _showWindowsNotification();
+        if (Platform.isWindows) {
+          await _showWindowsNotification();
+        }
       }
     });
   }
@@ -90,6 +97,7 @@ class _TimerCardState extends State<TimerCard> {
   @override
   void dispose() {
     _timeKeeper?.cancel();
+    flutterLocalNotificationsPlugin.cancel(widget.id);
     super.dispose();
   }
 
@@ -97,10 +105,16 @@ class _TimerCardState extends State<TimerCard> {
     if (_timer.isRunning) {
       setState(() {
         _timer.stop();
+        if (Platform.isAndroid) {
+          flutterLocalNotificationsPlugin.cancel(widget.id);
+        }
       });
     } else if (_timeKeeper != null) {
       setState(() {
         _timer.start();
+        if (Platform.isAndroid) {
+          _scheduleAndroidNotification();
+        }
       });
     } else {
       _startTimer();
@@ -108,6 +122,25 @@ class _TimerCardState extends State<TimerCard> {
   }
 
   Future<void> _showWindowsNotification() async {
+    const WindowsNotificationDetails windowsNotificationDetails =
+        WindowsNotificationDetails(
+          scenario: WindowsNotificationScenario.alarm,
+          actions: <WindowsAction>[
+            WindowsAction(content: 'Button', arguments: 'button'),
+          ],
+        );
+    NotificationDetails notificationDetails = NotificationDetails(
+      windows: windowsNotificationDetails,
+    );
+    await flutterLocalNotificationsPlugin.show(
+      widget.id,
+      widget.title,
+      'Temps écoulé.',
+      notificationDetails,
+    );
+  }
+
+  Future<void> _scheduleAndroidNotification() async {
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
           'Alarme',
@@ -117,22 +150,17 @@ class _TimerCardState extends State<TimerCard> {
           priority: Priority.high,
           additionalFlags: Int32List.fromList(<int>[4]),
         );
-    const WindowsNotificationDetails windowsNotificationDetails =
-        WindowsNotificationDetails(
-          scenario: WindowsNotificationScenario.alarm,
-          actions: <WindowsAction>[
-            WindowsAction(content: 'Button', arguments: 'button'),
-          ],
-        );
     NotificationDetails notificationDetails = NotificationDetails(
       android: androidNotificationDetails,
-      windows: windowsNotificationDetails,
     );
-    await flutterLocalNotificationsPlugin.show(
+    final london = tz.getLocation('Europe/London');
+    await flutterLocalNotificationsPlugin.zonedSchedule(
       widget.id,
       widget.title,
       'Temps écoulé.',
+      tz.TZDateTime.now(london).add(_remaining),
       notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 
@@ -179,6 +207,7 @@ class _TimerCardState extends State<TimerCard> {
                       onPressed: () {
                         setState(() {
                           _timer.stop();
+                          flutterLocalNotificationsPlugin.cancel(widget.id);
                           _timer.reset();
                           _remaining = widget.duration;
                         });
