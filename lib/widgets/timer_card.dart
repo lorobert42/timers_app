@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:timers_app/utils/duration.dart';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:timers_app/utils/notifications.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -60,7 +59,7 @@ class _TimerCardState extends State<TimerCard> {
       _timer.start();
     });
     if (Platform.isAndroid) {
-      await _scheduleAndroidNotification();
+      await scheduleAndroidNotification(widget.id, widget.title, _remaining);
     }
     _timeKeeper = Timer.periodic(Duration(milliseconds: 100), (timer) async {
       setState(() => _remaining = widget.duration - _timer.elapsed);
@@ -71,17 +70,10 @@ class _TimerCardState extends State<TimerCard> {
           _timer.stop();
         });
         if (Platform.isWindows) {
-          await _showWindowsNotification();
+          await showWindowsNotification(widget.id, widget.title);
         }
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _timeKeeper?.cancel();
-    flutterLocalNotificationsPlugin.cancel(widget.id);
-    super.dispose();
   }
 
   void _toggleTimer() {
@@ -96,7 +88,7 @@ class _TimerCardState extends State<TimerCard> {
       setState(() {
         _timer.start();
         if (Platform.isAndroid) {
-          _scheduleAndroidNotification();
+          scheduleAndroidNotification(widget.id, widget.title, _remaining);
         }
       });
     } else {
@@ -104,42 +96,11 @@ class _TimerCardState extends State<TimerCard> {
     }
   }
 
-  Future<void> _showWindowsNotification() async {
-    const WindowsNotificationDetails windowsNotificationDetails =
-        WindowsNotificationDetails(scenario: WindowsNotificationScenario.alarm);
-    NotificationDetails notificationDetails = NotificationDetails(
-      windows: windowsNotificationDetails,
-    );
-    await flutterLocalNotificationsPlugin.show(
-      widget.id,
-      widget.title,
-      'Temps écoulé.',
-      notificationDetails,
-    );
-  }
-
-  Future<void> _scheduleAndroidNotification() async {
-    AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(
-          'Alarme',
-          'Alarme',
-          channelDescription: 'Alarme lorsqu\'un timer est terminé.',
-          importance: Importance.max,
-          priority: Priority.high,
-          additionalFlags: Int32List.fromList(<int>[4]),
-        );
-    NotificationDetails notificationDetails = NotificationDetails(
-      android: androidNotificationDetails,
-    );
-    final london = tz.getLocation('Europe/London');
-    await flutterLocalNotificationsPlugin.zonedSchedule(
-      widget.id,
-      widget.title,
-      'Temps écoulé.',
-      tz.TZDateTime.now(london).add(_remaining),
-      notificationDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
+  @override
+  void dispose() {
+    _timeKeeper?.cancel();
+    flutterLocalNotificationsPlugin.cancel(widget.id);
+    super.dispose();
   }
 
   @override

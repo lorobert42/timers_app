@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:timers_app/utils/notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:material_duration_picker/material_duration_picker.dart';
 import 'package:timers_app/pages/home_page.dart';
@@ -9,32 +9,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   tz.initializeTimeZones();
-
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >()
-      ?.requestNotificationsPermission();
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >()
-      ?.requestExactAlarmsPermission();
-  const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/ic_launcher');
-  const WindowsInitializationSettings initializationSettingsWindows =
-      WindowsInitializationSettings(
-        appName: 'Timer App',
-        appUserModelId: 'Com.Lorobert.TimerApp',
-        guid: '334d0c4a-60e3-41bb-b74a-63d259863969',
-      );
-  final InitializationSettings initializationSettings = InitializationSettings(
-    android: initializationSettingsAndroid,
-    windows: initializationSettingsWindows,
-  );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await initNotificationsPlugin();
 
   runApp(const MyApp());
 }
