@@ -3,16 +3,18 @@ import 'dart:typed_data';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+class NotificationsGlobals {
+  static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+}
 
 Future<void> initNotificationsPlugin() async {
-  flutterLocalNotificationsPlugin
+  NotificationsGlobals.flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin
       >()
       ?.requestNotificationsPermission();
-  flutterLocalNotificationsPlugin
+  NotificationsGlobals.flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin
       >()
@@ -29,7 +31,9 @@ Future<void> initNotificationsPlugin() async {
     android: initializationSettingsAndroid,
     windows: initializationSettingsWindows,
   );
-  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  await NotificationsGlobals.flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+  );
 }
 
 Future<void> showWindowsNotification(int id, String title) async {
@@ -39,7 +43,7 @@ Future<void> showWindowsNotification(int id, String title) async {
     windows: windowsNotificationDetails,
   );
 
-  await flutterLocalNotificationsPlugin.show(
+  await NotificationsGlobals.flutterLocalNotificationsPlugin.show(
     id,
     title,
     'Temps écoulé.',
@@ -65,7 +69,7 @@ Future<void> scheduleAndroidNotification(
     android: androidNotificationDetails,
   );
   final london = tz.getLocation('Europe/London');
-  await flutterLocalNotificationsPlugin.zonedSchedule(
+  await NotificationsGlobals.flutterLocalNotificationsPlugin.zonedSchedule(
     id,
     title,
     'Temps écoulé.',

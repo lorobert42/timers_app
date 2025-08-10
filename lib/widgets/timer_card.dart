@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:timers_app/utils/duration.dart';
 import 'package:timers_app/utils/notifications.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class TimerCard extends StatefulWidget {
   final int id;
@@ -28,9 +26,6 @@ class _TimerCardState extends State<TimerCard> {
   final _timer = Stopwatch();
   Timer? _timeKeeper;
   Duration _remaining = Duration.zero;
-
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
 
   String get _timerText {
     if (_remaining < Duration.zero) {
@@ -81,7 +76,9 @@ class _TimerCardState extends State<TimerCard> {
       setState(() {
         _timer.stop();
         if (Platform.isAndroid) {
-          flutterLocalNotificationsPlugin.cancel(widget.id);
+          NotificationsGlobals.flutterLocalNotificationsPlugin.cancel(
+            widget.id,
+          );
         }
       });
     } else if (_timeKeeper != null) {
@@ -99,7 +96,7 @@ class _TimerCardState extends State<TimerCard> {
   @override
   void dispose() {
     _timeKeeper?.cancel();
-    flutterLocalNotificationsPlugin.cancel(widget.id);
+    NotificationsGlobals.flutterLocalNotificationsPlugin.cancel(widget.id);
     super.dispose();
   }
 
@@ -146,7 +143,8 @@ class _TimerCardState extends State<TimerCard> {
                       onPressed: () {
                         setState(() {
                           _timer.stop();
-                          flutterLocalNotificationsPlugin.cancel(widget.id);
+                          NotificationsGlobals.flutterLocalNotificationsPlugin
+                              .cancel(widget.id);
                           _timer.reset();
                           _remaining = widget.duration;
                         });
