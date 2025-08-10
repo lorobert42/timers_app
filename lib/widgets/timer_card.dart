@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:timers_app/utils/duration.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import 'package:flutter/material.dart';
@@ -36,29 +37,11 @@ class _TimerCardState extends State<TimerCard> {
     if (_remaining < Duration.zero) {
       setState(() => _remaining = Duration.zero);
     }
-    var split = _remaining.toString().split(':');
-    var hours = widget.duration.inHours > 0 ? '${split[0]}:' : '';
-    var minutes = widget.duration.inMinutes > 0 ? '${split[1]}:' : '';
-    var seconds = _remaining.inMinutes > 9
-        ? split[2].substring(0, 2)
-        : _remaining.inSeconds >= 10
-        ? split[2].substring(0, 4)
-        : split[2].substring(1, 4);
-    return '$hours$minutes$seconds';
+    return getFormattedTimer(_remaining, widget.duration);
   }
 
   String get _subtitleText {
-    var split = widget.duration.toString().split(':');
-    var hours = widget.duration.inHours > 0 ? '${split[0]} Heures ' : '';
-    var minutes = widget.duration.inMinutes > 0 && split[1] != '00'
-        ? '${split[1]} Minutes '
-        : '';
-    var seconds = split[2] == '00.000000'
-        ? ''
-        : widget.duration.inSeconds >= 10
-        ? '${split[2].substring(0, 2)} Secondes'
-        : '${split[2].substring(1, 2)} Secondes';
-    return '$hours$minutes$seconds';
+    return getTimerText(widget.duration);
   }
 
   @override
