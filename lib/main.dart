@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:timers_app/l10n/app_localizations.dart';
 import 'package:timers_app/utils/notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:material_duration_picker/material_duration_picker.dart';
@@ -26,9 +27,13 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
         GlobalMaterialDurationPickerLocalizations.delegate,
       ],
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const HomePage(),
     );
   }

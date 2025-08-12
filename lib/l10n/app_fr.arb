@@ -1,0 +1,54 @@
+{
+    "@@locale": "fr",
+    "title": "Titre",
+    "back": "Retour",
+    "add": "Ajouter",
+    "duration": "Durée",
+    "addTimer": "Ajouter un timer",
+    "newTimer": "Nouveau timer",
+    "timerName": "Nom du nouveau timer",
+    "noDuration": "Pas de durée sélectionnée.",
+    "timerDurationText": "{duration}",
+    "@timerDurationText": {
+        "description": "Comment formatter la durée sélectionnée.",
+        "placeholders": {
+            "duration": {
+                "type": "DateTime",
+                "format": "Hms"
+            }
+        }
+    },
+    "alarm": "Alarme",
+    "alarmNotification": "Temps écoulé.",
+    "channelDescription": "Alarme lorsqu'un timer est terminé.",
+    "nHours": "{count, plural, =0{} =1{1 Heure} other{{count} Heures}}",
+    "@nHours": {
+        "description": "Pluralisation des heures.",
+        "placeholders": {
+            "count": {
+                "type": "num",
+                "format": "compact"
+            }
+        }
+    },
+    "nMinutes": "{count, plural, =0{} =1{1 Minute} other{{count} Minutes}}",
+    "@nMinutes": {
+        "description": "Pluralisation des minutes.",
+        "placeholders": {
+            "count": {
+                "type": "num",
+                "format": "compact"
+            }
+        }
+    },
+    "nSeconds": "{count, plural, =0{0 Seconde} =1{1 Seconde} other{{count} Secondes}}",
+    "@nSeconds": {
+        "description": "Pluralisation des secondes.",
+        "placeholders": {
+            "count": {
+                "type": "num",
+                "format": "compact"
+            }
+        }
+    }
+}

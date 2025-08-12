@@ -1,0 +1,54 @@
+{
+    "@@locale": "en",
+    "title": "Title",
+    "back": "Back",
+    "add": "Add",
+    "duration": "Duration",
+    "addTimer": "Add a timer",
+    "newTimer": "New timer",
+    "timerName": "New timer name",
+    "noDuration": "No duration selected.",
+    "timerDurationText": "{duration}",
+    "@timerDurationText": {
+        "description": "How to format the selected duration text.",
+        "placeholders": {
+            "duration": {
+                "type": "DateTime",
+                "format": "Hms"
+            }
+        }
+    },
+    "alarm": "Alarm",
+    "alarmNotification": "Time is out.",
+    "channelDescription": "Alarm when a timer is over.",
+    "nHours": "{count, plural, =0{} =1{1 Hour} other{{count} Hours}}",
+    "@nHours": {
+        "description": "Pluralization of hours.",
+        "placeholders": {
+            "count": {
+                "type": "num",
+                "format": "compact"
+            }
+        }
+    },
+    "nMinutes": "{count, plural, =0{} =1{1 Minute} other{{count} Minutes}}",
+    "@nMinutes": {
+        "description": "Pluralization of minutes.",
+        "placeholders": {
+            "count": {
+                "type": "num",
+                "format": "compact"
+            }
+        }
+    },
+    "nSeconds": "{count, plural, =1{1 Second} other{{count} Second}}",
+    "@nSeconds": {
+        "description": "Pluralization of Seconds.",
+        "placeholders": {
+            "count": {
+                "type": "num",
+                "format": "compact"
+            }
+        }
+    }
+}

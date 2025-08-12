@@ -35,7 +35,7 @@ class _TimerCardState extends State<TimerCard> {
   }
 
   String get _subtitleText {
-    return getTimerText(widget.duration);
+    return getTimerText(widget.duration, context);
   }
 
   @override
@@ -54,7 +54,12 @@ class _TimerCardState extends State<TimerCard> {
       _timer.start();
     });
     if (Platform.isAndroid) {
-      await scheduleAndroidNotification(widget.id, widget.title, _remaining);
+      await scheduleAndroidNotification(
+        widget.id,
+        widget.title,
+        _remaining,
+        context,
+      );
     }
     _timeKeeper = Timer.periodic(Duration(milliseconds: 100), (timer) async {
       setState(() => _remaining = widget.duration - _timer.elapsed);
@@ -65,7 +70,7 @@ class _TimerCardState extends State<TimerCard> {
           _timer.stop();
         });
         if (Platform.isWindows) {
-          await showWindowsNotification(widget.id, widget.title);
+          await showWindowsNotification(widget.id, widget.title, context);
         }
       }
     });
@@ -85,7 +90,12 @@ class _TimerCardState extends State<TimerCard> {
       setState(() {
         _timer.start();
         if (Platform.isAndroid) {
-          scheduleAndroidNotification(widget.id, widget.title, _remaining);
+          scheduleAndroidNotification(
+            widget.id,
+            widget.title,
+            _remaining,
+            context,
+          );
         }
       });
     } else {

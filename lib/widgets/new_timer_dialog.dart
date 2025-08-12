@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_duration_picker/material_duration_picker.dart';
+import 'package:timers_app/l10n/app_localizations.dart';
 
 class NewTimerDialog extends StatefulWidget {
   final Function onAddCard;
@@ -23,8 +24,9 @@ class _NewTimerDialogState extends State<NewTimerDialog> {
     if (result != null) {
       setState(() {
         _selectedDuration = result;
-        _selectedDurationText =
-            '${_selectedDuration!.hour}h ${_selectedDuration!.minute}m ${_selectedDuration!.second}s';
+        _selectedDurationText = AppLocalizations.of(
+          context,
+        )!.timerDurationText(DateTime.utc(0).add(_selectedDuration!));
       });
     }
   }
@@ -34,7 +36,7 @@ class _NewTimerDialogState extends State<NewTimerDialog> {
     final screenWidth = MediaQuery.sizeOf(context).width;
 
     return AlertDialog(
-      title: const Text('Ajouter un timer'),
+      title: Text(AppLocalizations.of(context)!.addTimer),
       content: FractionallySizedBox(
         widthFactor: screenWidth > 600 ? 0.3 : 0.9,
         heightFactor: screenWidth > 600 ? 0.8 : 0.5,
@@ -47,8 +49,8 @@ class _NewTimerDialogState extends State<NewTimerDialog> {
               child: TextFormField(
                 controller: titleController,
                 decoration: InputDecoration(
-                  hintText: 'Nom de votre timer',
-                  labelText: 'Titre',
+                  hintText: AppLocalizations.of(context)!.timerName,
+                  labelText: AppLocalizations.of(context)!.title,
                 ),
               ),
             ),
@@ -60,11 +62,11 @@ class _NewTimerDialogState extends State<NewTimerDialog> {
                   ElevatedButton.icon(
                     onPressed: _showDurationPicker,
                     icon: Icon(Icons.timelapse),
-                    label: Text('Durée'),
+                    label: Text(AppLocalizations.of(context)!.duration),
                   ),
                   Text(
                     _selectedDurationText.isEmpty
-                        ? 'Pas de durée sélectionnée'
+                        ? AppLocalizations.of(context)!.noDuration
                         : _selectedDurationText,
                   ),
                 ],
@@ -76,7 +78,7 @@ class _NewTimerDialogState extends State<NewTimerDialog> {
               children: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text('Retour'),
+                  child: Text(AppLocalizations.of(context)!.back),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -87,7 +89,7 @@ class _NewTimerDialogState extends State<NewTimerDialog> {
                     widget.onAddCard(titleController.text, _selectedDuration);
                     Navigator.pop(context);
                   },
-                  child: Text('Ajouter'),
+                  child: Text(AppLocalizations.of(context)!.add),
                 ),
               ],
             ),

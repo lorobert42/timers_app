@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timers_app/l10n/app_localizations.dart';
 import 'package:timers_app/models/timer_card_model.dart';
 import 'package:timers_app/widgets/new_timer_dialog.dart';
 import 'package:timers_app/widgets/timer_card.dart';
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                   onPressed: _addCardMenu,
                   icon: Icon(Icons.add),
                 ),
-                Text('Nouveau timer'),
+                Text(AppLocalizations.of(context)!.newTimer),
               ],
             ),
           ),

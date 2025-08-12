@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timers_app/l10n/app_localizations.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationsGlobals {
@@ -36,7 +38,11 @@ Future<void> initNotificationsPlugin() async {
   );
 }
 
-Future<void> showWindowsNotification(int id, String title) async {
+Future<void> showWindowsNotification(
+  int id,
+  String title,
+  BuildContext context,
+) async {
   const WindowsNotificationDetails windowsNotificationDetails =
       WindowsNotificationDetails(scenario: WindowsNotificationScenario.alarm);
   NotificationDetails notificationDetails = NotificationDetails(
@@ -46,7 +52,7 @@ Future<void> showWindowsNotification(int id, String title) async {
   await NotificationsGlobals.flutterLocalNotificationsPlugin.show(
     id,
     title,
-    'Temps écoulé.',
+    AppLocalizations.of(context)!.alarmNotification,
     notificationDetails,
   );
 }
@@ -55,12 +61,13 @@ Future<void> scheduleAndroidNotification(
   int id,
   String title,
   Duration duration,
+  BuildContext context,
 ) async {
   AndroidNotificationDetails androidNotificationDetails =
       AndroidNotificationDetails(
-        'Alarme',
-        'Alarme',
-        channelDescription: 'Alarme lorsqu\'un timer est terminé.',
+        AppLocalizations.of(context)!.alarm,
+        AppLocalizations.of(context)!.alarm,
+        channelDescription: AppLocalizations.of(context)!.channelDescription,
         importance: Importance.max,
         priority: Priority.high,
         additionalFlags: Int32List.fromList(<int>[4]),
@@ -72,7 +79,7 @@ Future<void> scheduleAndroidNotification(
   await NotificationsGlobals.flutterLocalNotificationsPlugin.zonedSchedule(
     id,
     title,
-    'Temps écoulé.',
+    AppLocalizations.of(context)!.alarmNotification,
     tz.TZDateTime.now(london).add(duration),
     notificationDetails,
     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
